@@ -11,4 +11,4 @@ RUN npm install
 
 COPY ./ ./
 
-CMD ["nodemon" "index.local.js"]
+CMD [ "nodemon" "index.local.js" ]
