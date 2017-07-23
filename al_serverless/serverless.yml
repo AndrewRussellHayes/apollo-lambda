@@ -1,4 +1,4 @@
-service: al_serverless
+service: apollo-lambda
 provider:
   name: aws
   runtime: nodejs4.3
@@ -36,14 +36,14 @@ provider:
 functions:
   graphql:
     handler: handler.graphql
-    # events:
-    #   - http:
-    #       path: graphql
-    #       method: post
-    #       cors: true
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
 
   graphiql:
-    handler: handler.graphql
+    handler: handler.graphiql
 
   hello:
     handler: handler.hello
