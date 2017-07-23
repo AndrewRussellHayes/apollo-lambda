@@ -24,12 +24,25 @@ serverless deploy
 ```
 
 ## Now let's graphiql working
+- add the graphiql endpoint, and navigate here (make sure to include the 'query' query parameter on the end)
+ https://siclwpysu2.execute-api.ap-southeast-2.amazonaws.com/development/graphiql?query=
+ https://siclwpysu2.execute-api.ap-southeast-2.amazonaws.com/development/graphiql?query=query%20%7B%0A%20%20posts%20%7B%0A%20%20%20%20id%0A%20%20%7D%0A%7D&operationName=undefined
 
 
 ## How about a database somewhere along the line? Mongo? Dynamo? MySQL?
 
+## set up locally using express and docker - to test our resolvers etc:
+
+npm install --save express body-parser
+```
+# make all docker-compose, Dockerfiles etc.
+```
+
+## Adding optics
+
+## Adding front end
 
 
 # references
-- Apollo guide for AWS Serverless 
+- Apollo guide for AWS Serverless
 https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-lambda

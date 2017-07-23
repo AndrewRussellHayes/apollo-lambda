@@ -44,6 +44,10 @@ functions:
 
   graphiql:
     handler: handler.graphiql
+    events:
+      - http:
+          path: graphiql
+          method: get
 
   hello:
     handler: handler.hello
