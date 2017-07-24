@@ -4,21 +4,29 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const graphqlExpress = require('apollo-server-express').graphqlExpress;
+const apolloServerExpress = require('apollo-server-express')
+const graphqlExpress = apolloServerExpress.graphqlExpress;
+const graphiqlExpress = apolloServerExpress.graphiqlExpress;
 
-console.log("HEY!!");
-
-const schema = require('./Schema');
 const PORT = 3000;
-
 const app = express();
 
-app.get('/', function(req, res) {
-  res.send("Hello graphql");
-});
 
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema: schema }));
+//TODO: promise/resolveify
+const schema = require('./Schema');
 
-app.listen(PORT, function() {
-  console.log("server listening on port " + PORT);
+schema.setUp()
+.then(_schema => {
+  app.get('/', function(req, res) {
+    res.send("Hello graphql");
+  });
+
+  app.use('/graphql', bodyParser.json(), graphqlExpress({ schema: _schema }));
+  app.use('/graphiql', graphiqlExpress({
+    endpointURL: '/graphql',
+  }));
+
+  app.listen(PORT, function() {
+    console.log("server listening on port " + PORT);
+  });
 });

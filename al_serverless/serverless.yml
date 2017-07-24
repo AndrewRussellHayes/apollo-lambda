@@ -1,44 +1,28 @@
 service: apollo-lambda
 provider:
   name: aws
-  runtime: nodejs4.3
+  runtime: nodejs6.10
   region: ap-southeast-2
   stage: development
+  timeout: 15
   environment:
-    MONGODB_HOST: 'my_mongo_host'
-    MONGODB_PORT: '27017'
-
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
+    MONGO_HOST: ${env:MONGO_HOST}
+    MONGO_PORT: 27017
+    MONGO_NAME: posts
 
 functions:
   graphql:
     handler: handler.graphql
+    vpc:
+      securityGroupIds:
+        # - 'Fn::ImportValue': '${env:VPC_STAGE}-lambda-sg'
+        - sg-2a1f364d
+        - sg-0c11386b
+      subnetIds:
+        - subnet-e8633d9e
+        - subnet-826df7db
+        # - 'Fn::ImportValue': '${env:VPC_STAGE}-subnet-a-private'
+        # - 'Fn::ImportValue': '${env:VPC_STAGE}-subnet-b-private'
     events:
       - http:
           path: graphql

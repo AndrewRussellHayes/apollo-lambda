@@ -36,7 +36,11 @@ serverless deploy
 npm install --save express body-parser
 ```
 # make all docker-compose, Dockerfiles etc.
+# make index.local.js
 ```
+
+now naviate to:
+`http://docker.local:3000/graphiql`
 
 ## Adding optics
 
@@ -46,3 +50,4 @@ npm install --save express body-parser
 # references
 - Apollo guide for AWS Serverless
 https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-lambda
+https://medium.com/the-ideal-system/graphql-and-mongodb-a-quick-example-34643e637e49

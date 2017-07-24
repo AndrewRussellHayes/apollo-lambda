@@ -10,8 +10,10 @@ services:
     links:
       - al_mongo
     environment:
-      - MONGODB_HOST='al_mongo'
-      - MONGODB_PORT='27017'
+      # - MONGO_HOST=al_mongo
+      - MONGO_HOST
+      - MONGO_PORT=27017
+      - MONGO_NAME=posts
 
   al_mongo:
     image: mongo:3.0

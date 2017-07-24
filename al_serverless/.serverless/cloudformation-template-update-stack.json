@@ -42,6 +42,59 @@
             }
           ]
         },
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "development",
+                  "apollo-lambda",
+                  "lambda"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/apollo-lambda-development-graphql:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/apollo-lambda-development-graphiql:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/apollo-lambda-development-hello:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/apollo-lambda-development-graphql:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/apollo-lambda-development-graphiql:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/apollo-lambda-development-hello:*:*"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
         "Path": "/",
         "RoleName": {
           "Fn::Join": [
@@ -53,85 +106,9 @@
               "lambdaRole"
             ]
           ]
-        }
-      }
-    },
-    "IamPolicyLambdaExecution": {
-      "Type": "AWS::IAM::Policy",
-      "DependsOn": [
-        "IamRoleLambdaExecution"
-      ],
-      "Properties": {
-        "PolicyName": {
-          "Fn::Join": [
-            "-",
-            [
-              "development",
-              "apollo-lambda",
-              "lambda"
-            ]
-          ]
         },
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    ":",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "GraphqlLogGroup",
-                          "Arn"
-                        ]
-                      },
-                      "*"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    ":",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "GraphiqlLogGroup",
-                          "Arn"
-                        ]
-                      },
-                      "*"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    ":",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "HelloLogGroup",
-                          "Arn"
-                        ]
-                      },
-                      "*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        "Roles": [
-          {
-            "Ref": "IamRoleLambdaExecution"
-          }
+        "ManagedPolicyArns": [
+          "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
         ]
       }
     },
@@ -142,7 +119,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/apollo-lambda/development/1500777599070-2017-07-23T02:39:59.070Z/apollo-lambda.zip"
+          "S3Key": "serverless/apollo-lambda/development/1500855374094-2017-07-24T00:16:14.094Z/apollo-lambda.zip"
         },
         "FunctionName": "apollo-lambda-development-graphql",
         "Handler": "handler.graphql",
@@ -153,22 +130,39 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs4.3",
-        "Timeout": 6
+        "Runtime": "nodejs6.10",
+        "Timeout": 15,
+        "Environment": {
+          "Variables": {
+            "MONGO_HOST": "mywell-docker-elb-105870013.ap-southeast-2.elb.amazonaws.com",
+            "MONGO_PORT": 27017,
+            "MONGO_NAME": "posts"
+          }
+        },
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            "sg-2a1f364d",
+            "sg-0c11386b"
+          ],
+          "SubnetIds": [
+            "subnet-e8633d9e",
+            "subnet-826df7db"
+          ]
+        }
       },
       "DependsOn": [
-        "IamPolicyLambdaExecution",
+        "GraphqlLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "GraphqlLambdaVersione5hUoWlxtgWEF1Hq17h3xjDCj7xFHke6ih7R8t8os": {
+    "GraphqlLambdaVersionsB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GraphqlLambdaFunction"
         },
-        "CodeSha256": "e5hUoWlxtgWE/F1Hq17h3xjDCj7xFHke6ih7R8t/8os="
+        "CodeSha256": "sB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ="
       }
     },
     "GraphiqlLambdaFunction": {
@@ -178,7 +172,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/apollo-lambda/development/1500777599070-2017-07-23T02:39:59.070Z/apollo-lambda.zip"
+          "S3Key": "serverless/apollo-lambda/development/1500855374094-2017-07-24T00:16:14.094Z/apollo-lambda.zip"
         },
         "FunctionName": "apollo-lambda-development-graphiql",
         "Handler": "handler.graphiql",
@@ -189,22 +183,29 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs4.3",
-        "Timeout": 6
+        "Runtime": "nodejs6.10",
+        "Timeout": 15,
+        "Environment": {
+          "Variables": {
+            "MONGO_HOST": "mywell-docker-elb-105870013.ap-southeast-2.elb.amazonaws.com",
+            "MONGO_PORT": 27017,
+            "MONGO_NAME": "posts"
+          }
+        }
       },
       "DependsOn": [
-        "IamPolicyLambdaExecution",
+        "GraphiqlLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "GraphiqlLambdaVersione5hUoWlxtgWEF1Hq17h3xjDCj7xFHke6ih7R8t8os": {
+    "GraphiqlLambdaVersionsB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GraphiqlLambdaFunction"
         },
-        "CodeSha256": "e5hUoWlxtgWE/F1Hq17h3xjDCj7xFHke6ih7R8t/8os="
+        "CodeSha256": "sB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ="
       }
     },
     "HelloLambdaFunction": {
@@ -214,7 +215,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/apollo-lambda/development/1500777599070-2017-07-23T02:39:59.070Z/apollo-lambda.zip"
+          "S3Key": "serverless/apollo-lambda/development/1500855374094-2017-07-24T00:16:14.094Z/apollo-lambda.zip"
         },
         "FunctionName": "apollo-lambda-development-hello",
         "Handler": "handler.hello",
@@ -225,22 +226,29 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs4.3",
-        "Timeout": 6
+        "Runtime": "nodejs6.10",
+        "Timeout": 15,
+        "Environment": {
+          "Variables": {
+            "MONGO_HOST": "mywell-docker-elb-105870013.ap-southeast-2.elb.amazonaws.com",
+            "MONGO_PORT": 27017,
+            "MONGO_NAME": "posts"
+          }
+        }
       },
       "DependsOn": [
-        "IamPolicyLambdaExecution",
+        "HelloLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "HelloLambdaVersione5hUoWlxtgWEF1Hq17h3xjDCj7xFHke6ih7R8t8os": {
+    "HelloLambdaVersionsB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HelloLambdaFunction"
         },
-        "CodeSha256": "e5hUoWlxtgWE/F1Hq17h3xjDCj7xFHke6ih7R8t/8os="
+        "CodeSha256": "sB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ="
       }
     },
     "ApiGatewayRestApi": {
@@ -307,7 +315,7 @@
               "StatusCode": "200",
               "ResponseParameters": {
                 "method.response.header.Access-Control-Allow-Origin": "'*'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
                 "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'",
                 "method.response.header.Access-Control-Allow-Credentials": "'false'"
               },
@@ -401,7 +409,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1500777599209": {
+    "ApiGatewayDeployment1500855374246": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -490,19 +498,19 @@
     "GraphqlLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GraphqlLambdaVersione5hUoWlxtgWEF1Hq17h3xjDCj7xFHke6ih7R8t8os"
+        "Ref": "GraphqlLambdaVersionsB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ"
       }
     },
     "GraphiqlLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GraphiqlLambdaVersione5hUoWlxtgWEF1Hq17h3xjDCj7xFHke6ih7R8t8os"
+        "Ref": "GraphiqlLambdaVersionsB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ"
       }
     },
     "HelloLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HelloLambdaVersione5hUoWlxtgWEF1Hq17h3xjDCj7xFHke6ih7R8t8os"
+        "Ref": "HelloLambdaVersionsB5PAZPNX7b5irdOmmgw2BrJqDNYpjiXZ67E0FtUVvQ"
       }
     },
     "ServiceEndpoint": {
