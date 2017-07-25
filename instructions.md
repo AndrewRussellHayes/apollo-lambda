@@ -29,8 +29,10 @@ serverless deploy
  https://siclwpysu2.execute-api.ap-southeast-2.amazonaws.com/development/graphiql?query=query%20%7B%0A%20%20posts%20%7B%0A%20%20%20%20id%0A%20%20%7D%0A%7D&operationName=undefined
 
 
-## How about a database somewhere along the line? Mongo? Dynamo? MySQL?
 
+
+## How about a database somewhere along the line? Mongo? Dynamo? MySQL?
+Next post please
 ## set up locally using express and docker - to test our resolvers etc:
 
 npm install --save express body-parser
