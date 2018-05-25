@@ -1,7 +1,7 @@
 'use strict';
 
 const server = require("apollo-server-lambda");
-const schema = require('./Schema');
+const schema = require('./schema');
 exports.graphql = server.graphqlLambda((event, context) => {
   const headers = event.headers;
   const functionName = context.functionName;
