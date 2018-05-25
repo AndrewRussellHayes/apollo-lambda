@@ -1,4 +1,4 @@
-#Apollo Lambda
+# Apollo Lambda
 
 An example of getting Apollo working on AWS Lambda with the Serverless framework.
 
